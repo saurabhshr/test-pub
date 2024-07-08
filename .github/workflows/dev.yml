@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  SUPER_SECRET: ${{ secrets.DEV_AWS_DEPLOY_ROLE }}
+      
+
 jobs:
   dev:
     runs-on: ubuntu-latest
@@ -14,8 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-        env:
-          SUPER_SECRET: ${{ secrets.DEV_AWS_DEPLOY_ROLE }}
+        
       
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -24,7 +27,7 @@ jobs:
       
       - name: Run tests
         run: |
-          aws s3 sync . ${{ secrets.DEV_AWS_DEPLOY_ROLE }} --delete
+          aws s3 sync . $SUPER_SECRET --delete
           echo "secret value is: $SUPER_SECRET" $SUPER_SECRET
 
   staging:
