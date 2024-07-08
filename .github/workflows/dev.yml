@@ -18,12 +18,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK ${{env.JAVA_VERSION}}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{env.JAVA_VERSION}}
-        distribution: 'temurin'
-        cache: maven
     - name: Print name
       run: echo "Hello $NAME. $BUILD. Using Java Version $JAVA_VERSION"
       env:
