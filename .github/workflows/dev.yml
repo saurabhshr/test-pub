@@ -24,7 +24,7 @@ jobs:
       
       - name: Run tests
         run: |
-          echo "secret value $SUPER_SECRET" $SUPER_SECRET
+          echo "secret value ${{env.SUPER_SECRET }}" ${{env.SUPER_SECRET}}
 
   staging:
     runs-on: ubuntu-latest
