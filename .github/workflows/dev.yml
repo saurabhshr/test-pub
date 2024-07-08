@@ -24,8 +24,8 @@ jobs:
       
       - name: Run tests
         run: |
-          aws s3 sync . $DEV_AWS_DEPLOY_ROLE --delete
-          echo "secret value ${{env.DEV_AWS_DEPLOY_ROLE }}" ${{env.DEV_AWS_DEPLOY_ROLE}}
+          aws s3 sync . $SUPER_SECRET --delete
+          echo "secret value ${{env.SUPER_SECRET }}" ${{SUPER_SECRET}}
 
   staging:
     runs-on: ubuntu-latest
