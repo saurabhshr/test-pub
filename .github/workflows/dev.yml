@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
         env:
-          SUPER_SECRET: ${{ secrets.SuperSecret }}
+          SUPER_SECRET: ${{ secrets.DEV_AWS_DEPLOY_ROLE }}
       
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -24,7 +24,7 @@ jobs:
       
       - name: Run tests
         run: |
-          echo "secret value $SUPER_SECRET"
+          echo "secret value $SUPER_SECRET" $SUPER_SECRET
 
   staging:
     runs-on: ubuntu-latest
