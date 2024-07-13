@@ -1,53 +1,22 @@
-name: CI/CD Pipeline
+name: Build and Print Hello
 
 on:
   push:
     branches:
-      - dev
       - main
 
 jobs:
-  dev:
+  build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-      - name: Install Dependencies
-        run: npm ci
-        working-directory: app
-
-      - name: Build App
-        id: build
-        run: |
-          cd app
-          echo "Build successful"
-  prod:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 3
-
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: Install Dependencies
-        run: npm ci
-        working-directory: app
-
-      - name: Deploy app build to S3 bucket and Invalidate cache
-        run: |
-          echo "Prod build done"
+    - name: Print Hello
+      run: echo "Hello"
