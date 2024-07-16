@@ -19,4 +19,4 @@ jobs:
         node-version: '16'
 
     - name: Print Hello
-      run: echo "Hello"
+      run: echo "Hello world"
