@@ -35,16 +35,16 @@ jobs:
 
       - name: Terraform Init
         run: |
-          cd tf_code_dir
+          cd terraform
           terraform init
 
       - name: Terraform Plan
         run: |
-          cd tf_code_dir
+          cd terraform
           terraform plan -out=tfplan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: |
-          cd tf_code_dir
+          cd terraform
           terraform apply -auto-approve tfplan
