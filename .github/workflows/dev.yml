@@ -30,7 +30,7 @@ jobs:
         id: aws-creds
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_ROLE_NAME  # Replace with your IAM role ARN
+          role-to-assume: arn:aws:iam::710999489330:role/Github_OIDC  # Replace with your IAM role ARN
           aws-region: us-east-1  # Specify your AWS region
 
       - name: Terraform Init
