@@ -1,0 +1,51 @@
+name: Docker Build and Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build, Push Docker Image to ECR and Deploy to ECS
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_REGION: us-east-1  # Specify your AWS region
+      ECR_REGISTRY: "710999489330.dkr.ecr.us-west-2.amazonaws.com"  # ECR registry URL (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com)
+      ECR_REPOSITORY: "poc"  # ECR repository name
+      ECS_CLUSTER: "poc"  # ECS cluster name
+      ECS_SERVICE: "poc"  # ECS service name
+      IMAGE_TAG: ${{ github.sha }}  # Use the commit SHA as the image tag
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        id: aws-creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::710999489330:role/Github_OIDC  # Replace with your IAM role ARN
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag, and Push Docker Image
+        run: |
+          docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Deploy to ECS
+        run: |
+          # Update the ECS service with the new image
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
