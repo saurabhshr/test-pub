@@ -37,7 +37,7 @@ jobs:
       - name: Print Environment Variables Directly
         run: |
           echo "GTH_OIDC_ROLE_PROD=${{ secrets.GTH_OIDC_ROLE_PROD }}"
-          echo "GTH_OIDC_ROLE_DEV=${{ secrets.GTH_OIDC_ROLE_DEV }}"
+          echo "GTH_OIDC_ROLE_DEV=${{ vars.GTH_OIDC_ROLE_DEV }}"
 
       - name: Set Environment Variables
         run: |
@@ -46,16 +46,9 @@ jobs:
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             echo "ROLE_TO_ASSUME=${{ secrets.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
           else
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-            echo "ROLE_TO_ASSUME=${{ secrets.GTH_OIDC_ROLE_DEV }}" >> $GITHUB_ENV
+            echo "Unknown branch"
+            exit 1
           fi
-
-      - name: Print Environment Variables
-        run: |
-          echo "ENVIRONMENT=$ENVIRONMENT"
-          echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"
-          echo "Checking environment variables from GITHUB_ENV file:"
-          cat $GITHUB_ENV
 
       - name: Configure AWS Credentials
         id: aws-creds
