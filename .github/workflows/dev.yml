@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
@@ -34,32 +34,35 @@ jobs:
             cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
             terraform_wrapper: true
 
+      - name: Print Environment Variables Directly
+        run: |
+          echo "GTH_OIDC_ROLE_PROD=${{ secrets.GTH_OIDC_ROLE_PROD }}"
+          echo "GTH_OIDC_ROLE_DEV=${{ secrets.GTH_OIDC_ROLE_DEV }}"
+
       - name: Set Environment Variables
         run: |
           echo "GitHub ref: ${{ github.ref }}"
-          echo "GTH_OIDC_ROLE_PROD=${{ env.GTH_OIDC_ROLE_PROD }}"  # Print the value directly
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-            # Set a test value to ensure propagation
-            echo "ROLE_TO_ASSUME=arn:aws:iam::710999489330:role/Github_OIDC" >> $GITHUB_ENV
+            echo "ROLE_TO_ASSUME=${{ secrets.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
           else
-            echo "Unknown branch"
-            exit 1
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "ROLE_TO_ASSUME=${{ secrets.GTH_OIDC_ROLE_DEV }}" >> $GITHUB_ENV
           fi
-          
+
       - name: Print Environment Variables
         run: |
           echo "ENVIRONMENT=$ENVIRONMENT"
           echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"
           echo "Checking environment variables from GITHUB_ENV file:"
-          cat $GITHUB_ENV     
+          cat $GITHUB_ENV
 
       - name: Configure AWS Credentials
         id: aws-creds
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ env.ROLE_TO_ASSUME }}  # Use the dynamically set role
-          aws-region: ${{ vars.AWS_REGION }}  # Specify the AWS region
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform Init
         run: |
