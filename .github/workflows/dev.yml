@@ -37,7 +37,6 @@ jobs:
       - name: Print Environment Variables Directly
         run: |
           echo "GTH_OIDC_ROLE_PROD=${{ secrets.GTH_OIDC_ROLE_PROD }}"
-          echo "GTH_OIDC_ROLE_DEV=${{ vars.GTH_OIDC_ROLE_DEV }}"
 
       - name: Set Environment Variables
         run: |
