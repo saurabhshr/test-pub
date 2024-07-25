@@ -11,14 +11,12 @@ on:
       - main
       - develop
       - stage
-     
 
 jobs:
   terraform:
-  
     name: Terraform Init, Plan and Apply
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' || 'stg'}}
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
 
     permissions:
       id-token: write
@@ -26,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
@@ -35,13 +33,8 @@ jobs:
             cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
             terraform_wrapper: true
 
-      - name: Print Environment Variables Directly
-        run: |
-          echo "GTH_OIDC_ROLE_PROD=${{ secrets.GTH_OIDC_ROLE_PROD }}"
-
       - name: Set Environment Variables
         run: |
-          echo "GitHub ref: ${{ github.ref }}"
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
@@ -49,13 +42,17 @@ jobs:
             echo "Unknown branch"
             exit 1
           fi
+      - name: Print Environment Variables
+        run: |
+          echo "ENVIRONMENT=$ENVIRONMENT"
+          echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"     
 
       - name: Configure AWS Credentials
         id: aws-creds
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}  # Use the dynamically set role
+          aws-region: ${{ vars.AWS_REGION }}  # Specify the AWS region
 
       - name: Terraform Init
         run: |
@@ -68,7 +65,7 @@ jobs:
           terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/develop'
         run: |
           cd terraform
           terraform apply -auto-approve tfplan
