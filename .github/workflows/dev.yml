@@ -34,13 +34,17 @@ jobs:
 
       - name: Set Environment Variables
         run: |
+          echo "GitHub ref: ${{ github.ref }}"
+          echo "GTH_OIDC_ROLE_PROD=${{ vars.GTH_OIDC_ROLE_PROD }}"  # Print the value directly
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-            echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
+            # Set a test value to ensure propagation
+            echo "ROLE_TO_ASSUME=arn:aws:iam::710999489330:role/Github_OIDC" >> $GITHUB_ENV
           else
             echo "Unknown branch"
             exit 1
           fi
+          
       - name: Print Environment Variables
         run: |
           echo "ENVIRONMENT=$ENVIRONMENT"
@@ -50,7 +54,7 @@ jobs:
 
       - name: Configure AWS Credentials
         id: aws-creds
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ env.ROLE_TO_ASSUME }}  # Use the dynamically set role
           aws-region: ${{ vars.AWS_REGION }}  # Specify the AWS region
