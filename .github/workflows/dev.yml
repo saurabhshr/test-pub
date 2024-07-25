@@ -34,7 +34,6 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          env
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
@@ -42,6 +41,10 @@ jobs:
             echo "Unknown branch"
             exit 1
           fi
+      - name: Print Environment Variables
+        run: |
+          echo "ENVIRONMENT=$ENVIRONMENT"
+          echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"     
 
       - name: Configure AWS Credentials
         id: aws-creds
