@@ -17,6 +17,8 @@ jobs:
     name: Terraform Init, Plan and Apply
     runs-on: ubuntu-latest
 
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' || 'stg'}}
+
     permissions:
       id-token: write
       contents: read
@@ -35,7 +37,7 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "GitHub ref: ${{ github.ref }}"
-          echo "GTH_OIDC_ROLE_PROD=${{ secrets.GTH_OIDC_ROLE_PROD }}"  # Print the value directly
+          echo "GTH_OIDC_ROLE_PROD=${{ env.GTH_OIDC_ROLE_PROD }}"  # Print the value directly
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             # Set a test value to ensure propagation
