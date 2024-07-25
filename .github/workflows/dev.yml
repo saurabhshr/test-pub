@@ -35,6 +35,7 @@ jobs:
 
       - name: Set Environment Variables
         run: |
+          echo "${{ github.ref }}"
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
