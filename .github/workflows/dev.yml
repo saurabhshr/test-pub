@@ -11,11 +11,14 @@ on:
       - main
       - develop
       - stage
+     
 
 jobs:
   terraform:
+  
     name: Terraform Init, Plan and Apply
     runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' || 'stg'}}
 
     permissions:
       id-token: write
@@ -41,7 +44,7 @@ jobs:
           echo "GitHub ref: ${{ github.ref }}"
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-            echo "ROLE_TO_ASSUME=${{ secrets.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
+            echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
           else
             echo "Unknown branch"
             exit 1
