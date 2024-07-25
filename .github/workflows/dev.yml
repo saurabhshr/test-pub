@@ -48,7 +48,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.ROLE_TO_ASSUME }}  # Use the dynamically set role
-          aws-region: ${{ vars.TERRAFORM_VERSION }}  # Specify the AWS region
+          aws-region: ${{ vars.AWS_REGION }}  # Specify the AWS region
 
       - name: Terraform Init
         run: |
