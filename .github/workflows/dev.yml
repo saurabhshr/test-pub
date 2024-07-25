@@ -44,7 +44,9 @@ jobs:
       - name: Print Environment Variables
         run: |
           echo "ENVIRONMENT=$ENVIRONMENT"
-          echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"     
+          echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"
+          echo "Checking environment variables from GITHUB_ENV file:"
+          cat $GITHUB_ENV     
 
       - name: Configure AWS Credentials
         id: aws-creds
