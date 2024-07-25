@@ -42,17 +42,13 @@ jobs:
             echo "Unknown branch"
             exit 1
           fi
-      - name: Print Environment Variables
-        run: |
-          echo "ENVIRONMENT=$ENVIRONMENT"
-          echo "ROLE_TO_ASSUME=$ROLE_TO_ASSUME"     
 
       - name: Configure AWS Credentials
         id: aws-creds
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ env.ROLE_TO_ASSUME }}  # Use the dynamically set role
-          aws-region: ${{ vars.AWS_REGION }}  # Specify the AWS region
+          aws-region: ${{ secrets.AWS_REGION }}  # Specify the AWS region
 
       - name: Terraform Init
         run: |
