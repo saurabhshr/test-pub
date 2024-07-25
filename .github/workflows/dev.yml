@@ -40,7 +40,7 @@ jobs:
             echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_PROD }}" >> $GITHUB_ENV
             
           elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-            echo "ENVIRONMENT=Staging" >> $GITHUB_ENV
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
             echo "ROLE_TO_ASSUME=${{ vars.GTH_OIDC_ROLE_DEV }}" >> $GITHUB_ENV
             echo "coming in dev"
           else
