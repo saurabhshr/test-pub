@@ -17,8 +17,6 @@ jobs:
     name: Terraform Init, Plan and Apply
     runs-on: ubuntu-latest
 
-    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' || 'stg'}}
-
     permissions:
       id-token: write
       contents: read
