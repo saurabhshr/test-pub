@@ -1,17 +1,17 @@
-serviceName: <+serviceVariables.SERVICE_NAME>
-taskDefinition: <+serviceVariables.TASK_DEFINITION_NAME>
-desiredCount: <+serviceVariables.desired_count>
+serviceName: poc-service
+taskDefinition: poc-task
+desiredCount: 1
 launchType: FARGATE
 networkConfiguration:
   awsvpcConfiguration:
     subnets:
-      - <+serviceVariables.SUBNET_1>
-      - <+serviceVariables.SUBNET_2>
-      - <+serviceVariables.SUBNET_3>
+      - sg_hgv23r762r36723
+      - sg_sjksjd7657657
+      - sg_23hvjvjhhbjkh
     securityGroups:
-      - <+serviceVariables.SECURITY_GROUPS>
+      - sg_564hgcnvnbvnb
     assignPublicIp: ENABLED
 loadBalancers:
-  - targetGroupArn: <+serviceVariables.TARGET_GROUP_ARN>
-    containerName: <+serviceVariables.CONTAINER_NAME>
+  - targetGroupArn: arn:sd:sdsdsdsdsd
+    containerName: poc-container
     containerPort: 3000
