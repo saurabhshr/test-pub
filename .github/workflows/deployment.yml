@@ -46,5 +46,34 @@ jobs:
           REPOSITORY: poc
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          ocker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY:latest
+
+
+      - name: Initiate ECR Image Scan
+        run: |
+          aws ecr start-image-scan --repository-name poc --image-id imageTag=latest
+
+      - name: Check ECR Image Scan Status
+        id: scan-status
+        run: |
+          for i in {1..10}; do
+            SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --query 'imageScanStatus.status' --output text)
+            if [[ "$SCAN_STATUS" == "COMPLETE" ]]; then
+              exit 0
+            elif [[ "$SCAN_STATUS" == "FAILED" ]]; then
+              echo "Image scan failed."
+              exit 1
+            else
+              echo "Image scan in progress..."
+              sleep 10
+            fi
+          done
+          echo "Image scan timed out."
+          exit 1
+
+      - name: Get ECR Image Scan Findings
+        run: |
+          aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --output json    
