@@ -1,0 +1,17 @@
+serviceName: <+serviceVariables.SERVICE_NAME>
+taskDefinition: <+serviceVariables.TASK_DEFINITION_NAME>
+desiredCount: <+serviceVariables.desired_count>
+launchType: FARGATE
+networkConfiguration:
+  awsvpcConfiguration:
+    subnets:
+      - <+serviceVariables.SUBNET_1>
+      - <+serviceVariables.SUBNET_2>
+      - <+serviceVariables.SUBNET_3>
+    securityGroups:
+      - <+serviceVariables.SECURITY_GROUPS>
+    assignPublicIp: ENABLED
+loadBalancers:
+  - targetGroupArn: <+serviceVariables.TARGET_GROUP_ARN>
+    containerName: <+serviceVariables.CONTAINER_NAME>
+    containerPort: 3000
