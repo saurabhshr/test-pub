@@ -1,7 +1,7 @@
 {
   "containerDefinitions": [{
     "name": "poc-cont",
-    "image": "<+artifact.image>",
+    "image": "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc:c26e324ce7467928fd8a5156cca6fbfb1599439d",
     "cpu": 0,
     "portMappings": [{
       "containerPort": 3000,
