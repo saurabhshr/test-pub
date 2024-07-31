@@ -61,6 +61,7 @@ jobs:
         run: |
           for i in {1..10}; do
             SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --query 'imageScanStatus.status' --output text)
+            echo "Scan status: $SCAN_STATUS"
             if [[ "$SCAN_STATUS" == "COMPLETE" ]]; then
               exit 0
             elif [[ "$SCAN_STATUS" == "FAILED" ]]; then
@@ -76,4 +77,4 @@ jobs:
 
       - name: Get ECR Image Scan Findings
         run: |
-          aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --output json    
+          aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --output json
