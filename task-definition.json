@@ -20,13 +20,13 @@
       "value": "true"
     }, {
       "name": "STAGE",
-      "value": "<+serviceVariables.CURR_STAGE>"
+      "value": "dev"
     }, {
       "name": "ECS_FARGATE",
       "value": "true"
     }, {
       "name": "DD_SERVICE",
-      "value": "<+serviceVariables.DD_SERVICE>"
+      "value": "poc"
     }, {
       "name": "DD_TRACE_ENABLED",
       "value": "true"
@@ -35,42 +35,33 @@
       "value": "true"
     }, {
       "name": "DD_ENV",
-      "value": "<+serviceVariables.DD_ENV>"
+      "value": "dev"
     }, {
       "name": "DD_PROFILING_ENABLED",
       "value": "true"
     }, {
-      "name": "CONTENTFUL_ENV",
-      "value": "<+serviceVariables.CONTENTFUL_ENV>"
-    }, {
       "name": "ENV",
-      "value": "<+serviceVariables.ENV>"
-    }, {
-      "name": "CONTENTFUL_SPACE",
-      "value": "jwr70vng4s3j"
+      "value": "dev"
     }],
     "mountPoints": [],
     "volumesFrom": [],
-    "secrets": [{
-      "name": "CONTENTFUL_API_KEY",
-      "valueFrom": "<+serviceVariables.CONTENTFUL_API_KEY>"
-    }],
+    "secrets": [],
     "stopTimeout": 30,
     "workingDirectory": "/app",
     "readonlyRootFilesystem": false,
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "nest-api",
+        "awslogs-group": "poc-api",
         "awslogs-region": "us-west-2",
         "awslogs-stream-prefix": "nest-api"
       }
     },
     "systemControls": []
   }],
-  "family": "nest-api",
-  "taskRoleArn": "<+serviceVariables.ECS_TASK_ROLE>",
-  "executionRoleArn": "<+serviceVariables.ECS_TASK_EXECUTION_ROLE>",
+  "family": "poc-api",
+  "taskRoleArn": "sdssdfsfsfd",
+  "executionRoleArn": "sdfsdfsdfsdf",
   "networkMode": "awsvpc",
   "revision": 1,
   "volumes": [],
@@ -109,11 +100,11 @@
  "tags": [
         {
             "key": "Stage",
-            "value": "<+serviceVariables.CURR_STAGE>"
+            "value": "dev"
         },
         {
             "key": "Owner",
-            "value": "nona"
+            "value": "poc"
         }
     ]
 }
