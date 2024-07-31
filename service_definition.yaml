@@ -5,13 +5,13 @@ launchType: FARGATE
 networkConfiguration:
   awsvpcConfiguration:
     subnets:
-      - sg_hgv23r762r36723
-      - sg_sjksjd7657657
-      - sg_23hvjvjhhbjkh
+      - subnet-038ca30e50a63d75a
+      - subnet-0a7e9ab136d9911af
+      - subnet-0a5fed34f56f6292d
     securityGroups:
-      - sg_564hgcnvnbvnb
+      - sg-089be27d142998624
     assignPublicIp: ENABLED
 loadBalancers:
-  - targetGroupArn: arn:sd:sdsdsdsdsd
+  - targetGroupArn: arn:aws:elasticloadbalancing:us-west-2:710999489330:targetgroup/poc-trg/3c8a3ee3f5faa14b
     containerName: poc-container
     containerPort: 3000
