@@ -1,0 +1,119 @@
+{
+  "containerDefinitions": [{
+    "name": "poc-cont",
+    "image": "<+artifact.image>",
+    "cpu": 0,
+    "portMappings": [{
+      "containerPort": 3000,
+      "hostPort": 3000,
+      "protocol": "tcp"
+    }],
+    "essential": true,
+    "environment": [{
+      "name": "DD_TRACE_SAMPLE_RATE",
+      "value": "100"
+    }, {
+      "name": "DD_IAST_ENABLED",
+      "value": "true"
+    }, {
+      "name": "DD_APPSEC_ENABLED",
+      "value": "true"
+    }, {
+      "name": "STAGE",
+      "value": "<+serviceVariables.CURR_STAGE>"
+    }, {
+      "name": "ECS_FARGATE",
+      "value": "true"
+    }, {
+      "name": "DD_SERVICE",
+      "value": "<+serviceVariables.DD_SERVICE>"
+    }, {
+      "name": "DD_TRACE_ENABLED",
+      "value": "true"
+    }, {
+      "name": "DD_LOGS_INJECTION",
+      "value": "true"
+    }, {
+      "name": "DD_ENV",
+      "value": "<+serviceVariables.DD_ENV>"
+    }, {
+      "name": "DD_PROFILING_ENABLED",
+      "value": "true"
+    }, {
+      "name": "CONTENTFUL_ENV",
+      "value": "<+serviceVariables.CONTENTFUL_ENV>"
+    }, {
+      "name": "ENV",
+      "value": "<+serviceVariables.ENV>"
+    }, {
+      "name": "CONTENTFUL_SPACE",
+      "value": "jwr70vng4s3j"
+    }],
+    "mountPoints": [],
+    "volumesFrom": [],
+    "secrets": [{
+      "name": "CONTENTFUL_API_KEY",
+      "valueFrom": "<+serviceVariables.CONTENTFUL_API_KEY>"
+    }],
+    "stopTimeout": 30,
+    "workingDirectory": "/app",
+    "readonlyRootFilesystem": false,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "nest-api",
+        "awslogs-region": "us-west-2",
+        "awslogs-stream-prefix": "nest-api"
+      }
+    },
+    "systemControls": []
+  }],
+  "family": "nest-api",
+  "taskRoleArn": "<+serviceVariables.ECS_TASK_ROLE>",
+  "executionRoleArn": "<+serviceVariables.ECS_TASK_EXECUTION_ROLE>",
+  "networkMode": "awsvpc",
+  "revision": 1,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [{
+    "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+  }, {
+    "name": "ecs.capability.execution-role-awslogs"
+  }, {
+    "name": "com.amazonaws.ecs.capability.ecr-auth"
+  }, {
+    "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+  }, {
+    "name": "ecs.capability.secrets.asm.environment-variables"
+  }, {
+    "name": "ecs.capability.execution-role-ecr-pull"
+  }, {
+    "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+  }, {
+    "name": "ecs.capability.task-eni"
+  }],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "deploymentConfiguration": {
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 100
+  },
+ "tags": [
+        {
+            "key": "Stage",
+            "value": "<+serviceVariables.CURR_STAGE>"
+        },
+        {
+            "key": "Owner",
+            "value": "nona"
+        }
+    ]
+}
