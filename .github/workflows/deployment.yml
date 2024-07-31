@@ -1,4 +1,4 @@
-name: Docker Build and Deploy to ECS
+name: Docker Build and Deploy to ECR
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    name: Build, Push Docker Image to ECR and Deploy to ECS
+    name: Build, Push Docker Image to Corp Account
     runs-on: ubuntu-latest
 
     permissions:
@@ -18,8 +18,8 @@ jobs:
       contents: read
 
     env:
-      AWS_REGION: us-east-1  # Specify your AWS region
-      ECR_REGISTRY: "710999489330.dkr.ecr.us-west-2.amazonaws.com"  # ECR registry URL (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com)
+      AWS_REGION: us-west-2  # Specify your AWS region
+      ECR_REGISTRY: "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc"  # ECR registry URL (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com)
       ECR_REPOSITORY: "poc"  # ECR repository name
       ECS_CLUSTER: "poc"  # ECS cluster name
       ECS_SERVICE: "poc"  # ECS service name
@@ -31,9 +31,9 @@ jobs:
 
       - name: Configure AWS Credentials
         id: aws-creds
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::710999489330:role/Github_OIDC  # Replace with your IAM role ARN
+          role-to-assume: arn:aws:iam::710999489330:role/GitHub_OIDC  # Replace with your IAM role ARN
           aws-region: "us-west-2"
 
       - name: Login to Amazon ECR
