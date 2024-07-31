@@ -36,61 +36,27 @@ jobs:
           role-to-assume: arn:aws:iam::710999489330:role/GitHub_OIDC  # Replace with your IAM role ARN
           aws-region: "us-west-2"
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push docker image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: poc
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY:latest
-
-
-      - name: Initiate ECR Image Scan
-        run: |
-          MAX_RETRIES=5
-          RETRY_DELAY=30  # seconds
-          for ((i=1; i<=MAX_RETRIES; i++)); do
-            echo "Attempt $i to start image scan..."
-            SCAN_RESULT=$(aws ecr start-image-scan --repository-name poc --image-id imageTag=latest 2>&1)
-            if echo "$SCAN_RESULT" | grep -q 'LimitExceededException'; then
-              echo "Scan quota exceeded. Waiting $RETRY_DELAY seconds before retrying..."
-              sleep $RETRY_DELAY
-            else
-              echo "Scan started successfully."
-              break
-            fi
-            if [[ $i -eq $MAX_RETRIES ]]; then
-              echo "Exceeded maximum retries. Exiting."
-              exit 1
-            fi
-          done
-
-      - name: Check ECR Image Scan Status
-        id: scan-status
-        run: |
-          for i in {1..10}; do
-            SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --query 'imageScanStatus.status' --output text)
-            echo "Scan status: $SCAN_STATUS"
-            if [[ "$SCAN_STATUS" == "COMPLETE" ]]; then
-              exit 0
-            elif [[ "$SCAN_STATUS" == "FAILED" ]]; then
-              echo "Image scan failed."
-              exit 1
-            else
-              echo "Image scan in progress..."
-              sleep 10
-            fi
-          done
-          echo "Image scan timed out."
-          exit 1
-
-      - name: Get ECR Image Scan Findings
-        run: |
-          aws ecr describe-image-scan-findings --repository-name poc --image-id imageTag=latest --output json
+  Build-Push-Scan-Image:
+    runs-on: ubuntu-latest 
+    steps:
+    - name: Scan Docker image
+      id: docker-scan
+      uses: KeyValueSoftwareSystems/action-ecr-image-scan@main
+      env:
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+        IMAGE_TAG:  	${{ github.sha }}
+      with:
+        ecr_repository: ${{ env.ECR_REPOSITORY }}
+        image_tag: ${{ env.IMAGE_TAG }}
+        pr_comment: true
+        github_token: ${{ secrets.GITHUB_TOKEN }} 
+        url: ${{ github.event.pull_request.comments_url }}
+        aws_region: us-west-2    
+    - name: Fail workflow if vulnerabilities found
+      env:
+        vulnerability: ${{ steps.docker-scan.outputs.VULNERABILITY }}  
+        block_build_on_failure: true               
+      run:  | 
+        if [ "${{env.block_build_on_failure }}" = true && "${{ env.vulnerability }}" = true ]; then
+        exit 1
+        fi     
