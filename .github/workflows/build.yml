@@ -17,14 +17,6 @@ jobs:
       id-token: write
       contents: read
 
-    env:
-      AWS_REGION: us-west-2  # Specify your AWS region
-      ECR_REGISTRY: "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc"  # ECR registry URL (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com)
-      ECR_REPOSITORY: "poc"  # ECR repository name
-      ECS_CLUSTER: "poc"  # ECS cluster name
-      ECS_SERVICE: "poc"  # ECS service name
-      IMAGE_TAG: ${{ github.sha }}  # Use the commit SHA as the image tag
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -45,7 +37,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: poc
-          IMAGE_TAG: "latest" # ${{ github.sha }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
