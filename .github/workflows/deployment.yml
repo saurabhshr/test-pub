@@ -46,7 +46,16 @@ jobs:
          
         with:
           role-to-assume: arn:aws:iam::710999489330:role/GitHub_OIDC  # Replace with your IAM role ARN
-          aws-region: "us-west-2"   
+          aws-region: "us-west-2"
+
+      - name: Get image tag from build workflow
+        run: echo "IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }}" >> $GITHUB_ENV
+
+      - name: checking image name
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        run: |
+          echo   "coming $IMAGE_TAG"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -54,7 +63,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: poc-container
-          image: ${{ github.event.client_payload.image }}
+          image: ${{ env.IMAGE_TAG }} #${{ github.event.client_payload.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
