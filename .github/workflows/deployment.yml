@@ -12,14 +12,14 @@ on:
     workflows: [Build]
     types: [completed]
 
-  repository_dispatch:
-    types: [data-event]   
+  # repository_dispatch:
+  #   types: [data-event]   
 
 jobs:
   deploy:
     name: Deploying build to environments
     runs-on: ubuntu-latest
-    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
     permissions:
       id-token: write
@@ -31,10 +31,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.client_payload.ref }}
-      - run: echo "yeeee   ${{ github.event.client_payload.sha }}"
-      - run: echo ${{ github.event.client_payload }}
+      #   with:
+      #     ref: ${{ github.event.client_payload.ref }}
+      # - run: echo "yeeee   ${{ github.event.client_payload.sha }}"
+      # - run: echo ${{ github.event.client_payload }}
       
         # uses: actions/checkout@v3 
         # with:
@@ -51,11 +51,11 @@ jobs:
       - name: Get image tag from build workflow
         run: echo "IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }}" >> $GITHUB_ENV
 
-      - name: checking image name
-        env:
-          IMAGE_TAG: ${{ env.IMAGE_TAG }}
-        run: |
-          echo   "coming $IMAGE_TAG"
+      # - name: setting image name
+      #   env:
+      #     IMAGE_TAG: ${{ env.IMAGE_TAG }}
+      #   run: |
+      #     echo   "coming $IMAGE_TAG"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
