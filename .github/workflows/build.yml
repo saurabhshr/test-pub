@@ -55,7 +55,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PAT_TOKEN }}
-          repository: test-pub
+          repository: saurabhshr/test-pub
           event-type: data-event
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "image": "${{ env.image }}"}'    
           
