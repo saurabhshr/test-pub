@@ -19,7 +19,7 @@ jobs:
   deploy:
     name: Deploying build to environments
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
     permissions:
       id-token: write
