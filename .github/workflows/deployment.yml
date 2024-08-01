@@ -62,8 +62,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: grafana/k6-action@v0.3.0
         with:
-          script: ./k6_tests/test.js
-          parallel: 4
+          entryPoint: https://nest-api.dev.nona.hoag.digital
         env:
           K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
 
