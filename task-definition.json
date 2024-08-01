@@ -1,110 +1,49 @@
 {
-  "containerDefinitions": [{
-    "name": "poc-cont",
-    "image": "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc:c26e324ce7467928fd8a5156cca6fbfb1599439d",
-    "cpu": 0,
-    "portMappings": [{
-      "containerPort": 3000,
-      "hostPort": 3000,
-      "protocol": "tcp"
-    }],
-    "essential": true,
-    "environment": [{
-      "name": "DD_TRACE_SAMPLE_RATE",
-      "value": "100"
-    }, {
-      "name": "DD_IAST_ENABLED",
-      "value": "true"
-    }, {
-      "name": "DD_APPSEC_ENABLED",
-      "value": "true"
-    }, {
-      "name": "STAGE",
-      "value": "dev"
-    }, {
-      "name": "ECS_FARGATE",
-      "value": "true"
-    }, {
-      "name": "DD_SERVICE",
-      "value": "poc"
-    }, {
-      "name": "DD_TRACE_ENABLED",
-      "value": "true"
-    }, {
-      "name": "DD_LOGS_INJECTION",
-      "value": "true"
-    }, {
-      "name": "DD_ENV",
-      "value": "dev"
-    }, {
-      "name": "DD_PROFILING_ENABLED",
-      "value": "true"
-    }, {
-      "name": "ENV",
-      "value": "dev"
-    }],
-    "mountPoints": [],
-    "volumesFrom": [],
-    "secrets": [],
-    "stopTimeout": 30,
-    "workingDirectory": "/app",
-    "readonlyRootFilesystem": false,
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "poc-api",
-        "awslogs-region": "us-west-2",
-        "awslogs-stream-prefix": "nest-api"
-      }
-    },
-    "systemControls": []
-  }],
-  "family": "poc-api",
-  "taskRoleArn": "sdssdfsfsfd",
-  "executionRoleArn": "sdfsdfsdfsdf",
-  "networkMode": "awsvpc",
-  "revision": 1,
-  "volumes": [],
-  "status": "ACTIVE",
-  "requiresAttributes": [{
-    "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-  }, {
-    "name": "ecs.capability.execution-role-awslogs"
-  }, {
-    "name": "com.amazonaws.ecs.capability.ecr-auth"
-  }, {
-    "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-  }, {
-    "name": "ecs.capability.secrets.asm.environment-variables"
-  }, {
-    "name": "ecs.capability.execution-role-ecr-pull"
-  }, {
-    "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-  }, {
-    "name": "ecs.capability.task-eni"
-  }],
-  "placementConstraints": [],
-  "compatibilities": [
-    "EC2",
-    "FARGATE"
-  ],
-  "requiresCompatibilities": [
-    "FARGATE"
-  ],
-  "cpu": "256",
-  "memory": "512",
-  "deploymentConfiguration": {
-    "maximumPercent": 200,
-    "minimumHealthyPercent": 100
-  },
- "tags": [
+    "taskDefinitionArn": "arn:aws:ecs:us-west-2:710999489330:task-definition/poc-dev-api:1",
+    "containerDefinitions": [
         {
-            "key": "Stage",
-            "value": "dev"
+            "name": "poc-container",
+            "image": "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc",
+            "cpu": 0,
+            "portMappings": [],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "systemControls": []
+        }
+    ],
+    "family": "poc-dev-api",
+    "executionRoleArn": "arn:aws:iam::710999489330:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
         },
         {
-            "key": "Owner",
-            "value": "poc"
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
         }
-    ]
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "registeredAt": "2024-08-01T08:07:52.441Z",
+    "registeredBy": "arn:aws:iam::710999489330:user/saurabh.sharma@techaheadcorp.com",
+    "tags": []
 }
