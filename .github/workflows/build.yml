@@ -50,6 +50,14 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PAT }}
+          repository: saurabhshr/test-pub
+          event-type: data-event
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "image": "${{ env.image }}"}'    
           
 
   
