@@ -10,7 +10,10 @@ on:
 
   workflow_run:
     workflows: [Build]
-    types: [completed]    
+    types: [completed]
+
+  repository_dispatch:
+    types: [data-event]   
 
 jobs:
   deploy:
@@ -28,6 +31,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.ref }}
 
       - name: Configure AWS Credentials
         id: aws-creds
@@ -42,7 +47,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: poc-container
-          image: ${{ env.image }}
+          image: ${{ github.event.client_payload.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
