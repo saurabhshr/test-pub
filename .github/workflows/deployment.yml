@@ -8,22 +8,22 @@ on:
     branches:
       - main
 
+  workflow_run:
+    workflows: [Build]
+    types: [completed]    
+
 jobs:
   deploy:
     name: Build, Push Docker Image to Corp Account
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
     permissions:
       id-token: write
       contents: read
 
     env:
       AWS_REGION: us-west-2  # Specify your AWS region
-      ECR_REGISTRY: "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc"  # ECR registry URL (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com)
-      ECR_REPOSITORY: "poc"  # ECR repository name
-      ECS_CLUSTER: "poc"  # ECS cluster name
-      ECS_SERVICE: "poc"  # ECS service name
-      IMAGE_TAG: ${{ github.sha }}  # Use the commit SHA as the image tag
 
     steps:
       - name: Checkout Code
