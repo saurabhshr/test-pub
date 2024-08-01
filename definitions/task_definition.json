@@ -1,0 +1,49 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-west-2:710999489330:task-definition/poc-dev-api:1",
+    "containerDefinitions": [
+        {
+            "name": "poc-container",
+            "image": "710999489330.dkr.ecr.us-west-2.amazonaws.com/poc",
+            "cpu": 0,
+            "portMappings": [],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "systemControls": []
+        }
+    ],
+    "family": "poc-dev-api",
+    "executionRoleArn": "arn:aws:iam::710999489330:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "registeredAt": "2024-08-01T08:07:52.441Z",
+    "registeredBy": "arn:aws:iam::710999489330:user/saurabh.sharma@techaheadcorp.com",
+    "tags": []
+}
