@@ -30,16 +30,23 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.client_payload.ref }}
+      - run: echo ${{ github.event.client_payload.sha }}
+      - run: echo ${{ github.event.client_payload.image }}
+      
+        # uses: actions/checkout@v3 
+        # with:
+        #   ref: ${{ github.event.client_payload.ref }}
 
       - name: Configure AWS Credentials
         id: aws-creds
         uses: aws-actions/configure-aws-credentials@v2
+         
         with:
           role-to-assume: arn:aws:iam::710999489330:role/GitHub_OIDC  # Replace with your IAM role ARN
-          aws-region: "us-west-2"
+          aws-region: "us-west-2"   
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
