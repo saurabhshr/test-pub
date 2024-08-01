@@ -61,7 +61,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: definitions/task-definition.json
+          task-definition: definitions/task_definition.json
           container-name: poc-container
           image: ${{ env.IMAGE_TAG }} #${{ github.event.client_payload.image }}
 
