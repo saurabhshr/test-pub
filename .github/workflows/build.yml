@@ -50,7 +50,7 @@ jobs:
         uses: alexjurkiewicz/ecr-scan-image@v1.7.1
         with:
           repository: $ECR_REGISTRY/$ECR_REPOSITORY
-          tag: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          tag: $ECR_REPOSITORY:$IMAGE_TAG
       - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities."    
 
       # - name: Repository Dispatch
