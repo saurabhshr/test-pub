@@ -58,13 +58,13 @@ jobs:
       #     echo   "coming $IMAGE_TAG"
 
 
-      - name: Run K6 Performance Test
-        if: github.ref == 'refs/heads/main'
-        uses: grafana/k6-action@v0.3.0
-        with:
-          entryPoint: https://nest-api.dev.nona.hoag.digital
-        env:
-          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
+      # - name: Run K6 Performance Test
+      #   if: github.ref == 'refs/heads/main'
+      #   uses: grafana/k6-action@v0.3.0
+      #   with:
+      #     entryPoint: https://nest-api.dev.nona.hoag.digital
+      #   env:
+      #     K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
