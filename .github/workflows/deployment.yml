@@ -54,7 +54,7 @@ jobs:
       - name: Download build SHA artifact
         uses: actions/download-artifact@v2
         with:
-          name: build-sha
+          name: my-artifact
 
       - name: Read build SHA
         id: read-sha
