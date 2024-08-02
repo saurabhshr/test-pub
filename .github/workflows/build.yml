@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
   pull_request:
     branches:
       - main
@@ -51,4 +50,18 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
           echo "latest image tag  $IMAGE_TAG"
+
+      - name: Save SHA as artifact
+        run: echo "${{ github.sha }}" > sha.txt
+
+      - name: Debug SHA file creation
+        run: cat sha.txt
+
+      - name: Upload build SHA artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-sha
+          path: sha.txt
+
+          
   
