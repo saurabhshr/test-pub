@@ -45,9 +45,27 @@ jobs:
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_ENV
           echo "coming :     $ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
-      - name: Scan image in Amazon ECR
-        run: |
-          aws ecr start-image-scan --repository-name poc --image-id imageTag=latest    
+      - name: Scan Docker image
+        id: docker-scan
+        uses: KeyValueSoftwareSystems/action-ecr-image-scan@main
+        env:
+         ECR_REPOSITORY: poc
+         IMAGE_TAG: latest
+        with:
+          ecr_repository: poc
+          image_tag: latest
+          pr_comment: true
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          url: ${{ github.event.pull_request.comments_url }}
+          aws_region: us-west-2    
+      - name: Fail workflow if vulnerabilities found
+        env:
+          vulnerability: ${{ steps.docker-scan.outputs.VULNERABILITY }}  
+          block_build_on_failure: true               
+        run:  | 
+          if [ "${{env.block_build_on_failure }}" = true && "${{ env.vulnerability }}" = true ]; then
+          exit 1
+          fi    
 
 
       # - name: Scan Docker image
