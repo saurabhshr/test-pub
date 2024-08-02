@@ -43,6 +43,7 @@ jobs:
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_ENV
+          echo "coming :     $ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
 
       - name: Scan Docker image
@@ -51,7 +52,7 @@ jobs:
         with:
           repository: $ECR_REGISTRY/$ECR_REPOSITORY
           tag: $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities."    
+      - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities." 
 
       # - name: Repository Dispatch
       #   uses: peter-evans/repository-dispatch@v3
