@@ -50,7 +50,7 @@ jobs:
         id: docker-scan
         uses: alexjurkiewicz/ecr-scan-image@v1.7.1
         with:
-          repository: ${{ env.ECR_REGISTRY }}/$ECR_REPOSITORY
+          repository: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc
           tag: latest
       - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities." 
 
