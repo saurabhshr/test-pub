@@ -50,10 +50,13 @@ jobs:
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
           echo   "coming $IMAGE_TAG"
-
-      - name: Download build SHA artifact
-        uses: actions/download-artifact@v4
+          
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v6
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: build.yml
           name: build-sha
 
       - name: Debug artifact download
