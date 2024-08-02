@@ -51,6 +51,20 @@ jobs:
         run: |
           echo   "coming $IMAGE_TAG"
 
+      - name: Download build SHA artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-sha
+
+      - name: Read build SHA
+        id: read-sha
+        run: |
+          SHA=$(cat sha.txt)
+          echo "BUILD_SHA=$SHA" >> $GITHUB_ENV
+
+      - name: Use the build SHA
+        run: echo "Using build SHA ${{ env.BUILD_SHA }} for deployment"    
+
 
       # - name: Run K6 Performance Test
       #   if: github.ref == 'refs/heads/main'
