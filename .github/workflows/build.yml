@@ -43,38 +43,16 @@ jobs:
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_ENV
-          echo "coming :     $ECR_REGISTRY/$ECR_REPOSITORY:latest"
+          echo "coming :     $ECR_REGISTRY/$ECR_REPOSITORY:latest"   
+
 
       - name: Scan Docker image
         id: docker-scan
-        uses: KeyValueSoftwareSystems/action-ecr-image-scan@main
-        env:
-         ECR_REPOSITORY: poc
-         IMAGE_TAG: latest
+        uses: alexjurkiewicz/ecr-scan-image@v1.7.1
         with:
-          ecr_repository: poc
-          image_tag: latest
-          pr_comment: true
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
-          url: ${{ github.event.pull_request.comments_url }}
-          aws_region: us-west-2    
-      - name: Fail workflow if vulnerabilities found
-        env:
-          vulnerability: ${{ steps.docker-scan.outputs.VULNERABILITY }}  
-          block_build_on_failure: true               
-        run:  | 
-          if [ "${{env.block_build_on_failure }}" = true && "${{ env.vulnerability }}" = true ]; then
-          exit 1
-          fi    
-
-
-      # - name: Scan Docker image
-      #   id: docker-scan
-      #   uses: alexjurkiewicz/ecr-scan-image@v1.7.1
-      #   with:
-      #     repository: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc
-      #     tag: latest
-      # - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities." 
+          repository: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc
+          tag: latest
+      - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities." 
 
       # - name: Repository Dispatch
       #   uses: peter-evans/repository-dispatch@v3
