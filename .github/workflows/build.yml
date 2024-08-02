@@ -45,14 +45,18 @@ jobs:
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_ENV
           echo "coming :     $ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
+      - name: Scan image in Amazon ECR
+        run: |
+          aws ecr start-image-scan --repository-name poc --image-id imageTag=latest    
 
-      - name: Scan Docker image
-        id: docker-scan
-        uses: alexjurkiewicz/ecr-scan-image@v1.7.1
-        with:
-          repository: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc
-          tag: latest
-      - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities." 
+
+      # - name: Scan Docker image
+      #   id: docker-scan
+      #   uses: alexjurkiewicz/ecr-scan-image@v1.7.1
+      #   with:
+      #     repository: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc
+      #     tag: latest
+      # - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities." 
 
       # - name: Repository Dispatch
       #   uses: peter-evans/repository-dispatch@v3
