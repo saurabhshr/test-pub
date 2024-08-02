@@ -52,10 +52,15 @@ jobs:
           echo "latest image tag  $IMAGE_TAG"
 
       - name: Save SHA as artifact
-      - run: echo ${{ github.sha }} > sha.txt
-      - uses: actions/upload-artifact@v4
+        run: echo "${{ github.sha }}" > sha.txt
+
+      - name: Debug SHA file creation
+        run: cat sha.txt
+
+      - name: Upload build SHA artifact
+        uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
+          name: build-sha
           path: sha.txt
 
           
