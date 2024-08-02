@@ -51,5 +51,12 @@ jobs:
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
           echo "latest image tag  $IMAGE_TAG"
 
+      - run: mkdir -p path/to/artifact
+      - run: echo hello > world.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: world.txt    
+
           
   
