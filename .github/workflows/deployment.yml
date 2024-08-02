@@ -51,11 +51,11 @@ jobs:
       - name: Get image tag from build workflow
         run: echo IMAGE_TAG=${{ github.event.workflow_run.conclusion }} >> $GITHUB_ENV  #"IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }}" >> $GITHUB_ENV
 
-      # - name: setting image name
-      #   env:
-      #     IMAGE_TAG: ${{ env.IMAGE_TAG }}
-      #   run: |
-      #     echo   "coming $IMAGE_TAG"
+      - name: setting image name
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        run: |
+          echo   "coming $IMAGE_TAG"
 
 
       # - name: Run K6 Performance Test
