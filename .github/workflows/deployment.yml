@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
      releaseType:
-       description: 'Where to release staging and prod'
+       description: 'Where to release stage and prod'
        required: true
        default: dev
    
