@@ -71,17 +71,16 @@ jobs:
       - name: Use the build SHA
         run: echo "Using build SHA ${{ env.BUILD_SHA }} for deployment"  
 
-      - name: Request Approval
-        if: github.ref == 'refs/heads/main'
-        uses: trstringer/manual-approval@v1
-        timeout-minutes: 60
+      - uses: trstringer/manual-approval@v1
         with:
-            approvers: 'saurabhshr123'  # Replace with the GitHub username of the approver
-            secret: ${{ secrets.GH_OAUTH_TOKEN }}
-            ISSUE_REPO: 'saurabhshr123/test-pub'
-            minimum-approvals: 1
-            issue-title: "Approval Required: Deploy to Production"
-            issue-body: "Please approve or deny the deployment of the latest changes to the production environment."   
+          secret: ${{ github.TOKEN }}
+          approvers: saurabhshr
+          minimum-approvals: 1
+          issue-title: "Deploying v1.3.5 to prod from staging"
+          issue-body: "Please approve or deny the deployment of version v1.3.5."
+          exclude-workflow-initiator-as-approver: false
+          additional-approved-words: ''
+          additional-denied-words: ''   
 
 
       # - name: Run K6 Performance Test
