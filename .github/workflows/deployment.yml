@@ -73,10 +73,12 @@ jobs:
 
 
       - name: Download Docker image artifact
-        uses: actions/download-artifact@v3
+        id: download-artifact2
+        uses: dawidd6/action-download-artifact@v6
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: build.yml
           name: docker-image
-          path: .
 
       - name: Load Docker image from file
         run: docker load -i nona-image.tar
