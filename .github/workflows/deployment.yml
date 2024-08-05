@@ -22,9 +22,10 @@ permissions:
 
 jobs:
   deploy:
+    if: github.event.inputs.releaseType == 'prod' && ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Deploying build to environments
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     env:
       AWS_REGION: us-west-2  # Specify your AWS region
