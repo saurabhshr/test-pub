@@ -71,18 +71,6 @@ jobs:
       - name: Use the build SHA
         run: echo "Using build SHA ${{ env.BUILD_SHA }} for deployment"  
 
-
-      - name: Download Docker image artifact
-        id: download-artifact2
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: build.yml
-          name: docker-image
-
-      - name: Load Docker image from file
-        run: docker load -i nona-image.tar
-
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
