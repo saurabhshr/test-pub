@@ -60,12 +60,12 @@ jobs:
           path: sha.txt
 
       - name: Save Docker image to tar file
-        run: docker save $REGISTRY/$REPOSITORY:$IMAGE_TAG | gzip > nona-image.tar.gz
+        run: docker save $REGISTRY/$REPOSITORY:$IMAGE_TAG | gzip > nona-image.tar
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v2
         with:
           name: docker-image
-          path: nona-image.tar.gz    
+          path: nona-image.tar   
 
           
   
