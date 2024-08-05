@@ -9,11 +9,12 @@ on:
   # repository_dispatch:
   #   types: [data-event]
 
-  # workflow_dispatch:
-  #   inputs:
-  #    releaseType:
-  #      description: 'Where to release staging and prod'
-  #      required: true
+  workflow_dispatch:
+    inputs:
+     releaseType:
+       description: 'Where to release staging and prod'
+       required: true
+       default: dev
    
 
 permissions:
@@ -21,97 +22,133 @@ permissions:
       contents: read
 
 jobs:
-  deploy:
-    #if: github.event.inputs.releaseType == 'prod' && ${{ github.event.workflow_run.conclusion == 'success' }}
-    name: Deploying build to environments
+
+  dev:
     runs-on: ubuntu-latest
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    
-
-    env:
-      AWS_REGION: us-west-2  # Specify your AWS region
+    if: github.event.inputs.releaseType == 'dev'
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Production Job
+        run: echo "Running Production Job"
+
+  stage:
+    runs-on: ubuntu-latest
+    needs: [dev]
+    if: github.event.inputs.releaseType == 'stage'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Production Job
+        run: echo "Running Production Job"
+
+  prod:
+    runs-on: ubuntu-latest
+    needs: [dev, stage]
+    if: github.event.inputs.releaseType == 'prod'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Production Job
+        run: echo "Running Production Job"     
+
+  # deploy:
+  #   if: github.event.inputs.releaseType == 'prod'
+  #   name: Deploying build to environments
+  #   runs-on: ubuntu-latest
+  #   # if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     
-      - name: Checkout Code
-        uses: actions/checkout@v3
+
+  #   env:
+  #     AWS_REGION: us-west-2  # Specify your AWS region
+
+  #   steps:
+
+    
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
 
 
-      - name: Request Approval
-        if: github.ref == 'refs/heads/main'
-        uses: trstringer/manual-approval@v1
-        timeout-minutes: 60
-        with:
-            approvers: 'saurabhshr'  # Replace with the GitHub username of the approver
-            secret: ${{ secrets.GH_OAUTH_TOKEN }}
-            ISSUE_REPO: 'saurabhshr/test-pub'
-            minimum-approvals: 1
-            issue-title: "Approval Required: Deploy to Production"
-            issue-body: "Please approve or deny the deployment of the latest changes to the production environment."
+  #     - name: Request Approval
+  #       if: github.ref == 'refs/heads/main'
+  #       uses: trstringer/manual-approval@v1
+  #       timeout-minutes: 60
+  #       with:
+  #           approvers: 'saurabhshr'  # Replace with the GitHub username of the approver
+  #           secret: ${{ secrets.GH_OAUTH_TOKEN }}
+  #           ISSUE_REPO: 'saurabhshr/test-pub'
+  #           minimum-approvals: 1
+  #           issue-title: "Approval Required: Deploy to Production"
+  #           issue-body: "Please approve or deny the deployment of the latest changes to the production environment."
             
-      #   with:
-      #     ref: ${{ github.event.client_payload.ref }}
-      # - run: echo "yeeee   ${{ github.event.client_payload.sha }}"
-      # - run: echo ${{ github.event.client_payload }}
+  #     #   with:
+  #     #     ref: ${{ github.event.client_payload.ref }}
+  #     # - run: echo "yeeee   ${{ github.event.client_payload.sha }}"
+  #     # - run: echo ${{ github.event.client_payload }}
       
-        # uses: actions/checkout@v3 
-        # with:
-        #   ref: ${{ github.event.client_payload.ref }}
+  #       # uses: actions/checkout@v3 
+  #       # with:
+  #       #   ref: ${{ github.event.client_payload.ref }}
 
-      - name: Configure AWS Credentials
-        id: aws-creds
-        uses: aws-actions/configure-aws-credentials@v2
+  #     - name: Configure AWS Credentials
+  #       id: aws-creds
+  #       uses: aws-actions/configure-aws-credentials@v2
          
-        with:
-          role-to-assume: arn:aws:iam::710999489330:role/GitHub_OIDC  # Replace with your IAM role ARN
-          aws-region: "us-west-2"
+  #       with:
+  #         role-to-assume: arn:aws:iam::710999489330:role/GitHub_OIDC  # Replace with your IAM role ARN
+  #         aws-region: "us-west-2"
 
-      - name: Get image tag from build workflow
-        run: echo IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }} >> $GITHUB_ENV
+  #     - name: Get image tag from build workflow
+  #       run: echo IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }} >> $GITHUB_ENV
 
-      - name: setting image name
-        env:
-          IMAGE_TAG: ${{ env.IMAGE_TAG }}
-        run: |
-          echo   "coming $IMAGE_TAG"
+  #     - name: setting image name
+  #       env:
+  #         IMAGE_TAG: ${{ env.IMAGE_TAG }}
+  #       run: |
+  #         echo   "coming $IMAGE_TAG"
           
-      - name: Download artifact
-        id: download-artifact
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: build.yml
-          name: build-sha
+  #     - name: Download artifact
+  #       id: download-artifact
+  #       uses: dawidd6/action-download-artifact@v6
+  #       with:
+  #         github_token: ${{secrets.GITHUB_TOKEN}}
+  #         workflow: build.yml
+  #         name: build-sha
 
-      - name: Debug artifact download
-        run: ls -la
+  #     - name: Debug artifact download
+  #       run: ls -la
 
-      - name: Read build SHA
-        id: read-sha
-        run: |
-          SHA=$(cat sha.txt)
-          echo "BUILD_SHA=$SHA" >> $GITHUB_ENV
+  #     - name: Read build SHA
+  #       id: read-sha
+  #       run: |
+  #         SHA=$(cat sha.txt)
+  #         echo "BUILD_SHA=$SHA" >> $GITHUB_ENV
 
-      - name: Use the build SHA
-        run: echo "Using build SHA ${{ env.BUILD_SHA }} for deployment"  
+  #     - name: Use the build SHA
+  #       run: echo "Using build SHA ${{ env.BUILD_SHA }} for deployment"  
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: definitions/task_definition.json
-          container-name: poc-container
-          image: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc:${{ env.IMAGE_TAG }} #${{ github.event.client_payload.image }}
+  #     - name: Fill in the new image ID in the Amazon ECS task definition
+  #       id: task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: definitions/task_definition.json
+  #         container-name: poc-container
+  #         image: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc:${{ env.IMAGE_TAG }} #${{ github.event.client_payload.image }}
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: poc-service
-          cluster: poc-cluster
-          wait-for-service-stability: true 
+  #     - name: Deploy Amazon ECS task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
+  #         service: poc-service
+  #         cluster: poc-cluster
+  #         wait-for-service-stability: true 
           
 
   
