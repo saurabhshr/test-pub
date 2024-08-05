@@ -7,7 +7,14 @@ on:
       - completed
 
   # repository_dispatch:
-  #   types: [data-event] 
+  #   types: [data-event]
+
+  workflow_dispatch:
+    inputs:
+     releaseType:
+       description: 'Where to release staging and prod'
+       required: true
+   
 
 permissions:
       id-token: write
