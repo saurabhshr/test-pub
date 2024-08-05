@@ -75,7 +75,7 @@ jobs:
       - name: Download Docker image artifact
         uses: actions/download-artifact@v3
         with:
-          name: nona-image
+          name: docker-image
           path: .
 
       - name: Load Docker image from file
