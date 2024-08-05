@@ -46,7 +46,7 @@ jobs:
 
       - uses: trstringer/manual-approval@v1
         with:
-          secret: ${{ secret.PAT_TOKEN }}
+          secret: ${{ secrets.PAT_TOKEN }}
           approvers: saurabhshr  
 
       - name: Run Production Job
