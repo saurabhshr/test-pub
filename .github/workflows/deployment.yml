@@ -13,17 +13,11 @@ permissions:
       id-token: write
       contents: read
 
-  
-
-  
-
 jobs:
   deploy:
     name: Deploying build to environments
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    
-    
 
     env:
       AWS_REGION: us-west-2  # Specify your AWS region
@@ -49,7 +43,7 @@ jobs:
           aws-region: "us-west-2"
 
       - name: Get image tag from build workflow
-        run: echo IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }} >> $GITHUB_ENV  #"IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }}" >> $GITHUB_ENV
+        run: echo IMAGE_TAG=${{ github.event.workflow_run.head_commit.id }} >> $GITHUB_ENV
 
       - name: setting image name
         env:
@@ -77,25 +71,15 @@ jobs:
       - name: Use the build SHA
         run: echo "Using build SHA ${{ env.BUILD_SHA }} for deployment"  
 
-      - uses: trstringer/manual-approval@v1
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v3
         with:
-          secret: ${{ github.TOKEN }}
-          approvers: rohantechahead
-          minimum-approvals: 1
-          issue-title: "Deploying v1.3.5 to prod from staging"
-          issue-body: "Please approve or deny the deployment of version v1.3.5."
-          exclude-workflow-initiator-as-approver: false
-          additional-approved-words: ''
-          additional-denied-words: ''   
+          name: nona-image
+          path: .
 
-
-      # - name: Run K6 Performance Test
-      #   if: github.ref == 'refs/heads/main'
-      #   uses: grafana/k6-action@v0.3.0
-      #   with:
-      #     entryPoint: https://nest-api.dev.nona.hoag.digital
-      #   env:
-      #     K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
+      - name: Load Docker image from file
+        run: docker load -i nona-image.tar
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -103,7 +87,7 @@ jobs:
         with:
           task-definition: definitions/task_definition.json
           container-name: poc-container
-          image: ${{ env.IMAGE_TAG }} #${{ github.event.client_payload.image }}
+          image: 710999489330.dkr.ecr.us-west-2.amazonaws.com/poc:${{ env.IMAGE_TAG }} #${{ github.event.client_payload.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
