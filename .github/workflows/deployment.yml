@@ -9,12 +9,12 @@ on:
   # repository_dispatch:
   #   types: [data-event]
 
-  workflow_dispatch:
-    inputs:
-     releaseType:
-       description: 'Where to release stage and prod'
-       required: true
-       default: dev
+  # workflow_dispatch:
+  #   inputs:
+  #    releaseType:
+  #      description: 'Where to release stage and prod'
+  #      required: true
+  #      default: dev
    
 
 permissions:
@@ -23,9 +23,8 @@ permissions:
 
 jobs:
 
-  dev:
+  build:
     runs-on: ubuntu-latest
-    if: github.event.inputs.releaseType == 'dev'
 
     steps:
       - name: Checkout code
@@ -34,29 +33,21 @@ jobs:
       - name: Run Production Job
         run: echo "Running Production Job"
 
-  stage:
+  deploy:
     runs-on: ubuntu-latest
-    needs: [dev]
-    if: github.event.inputs.releaseType == 'stage'
+    needs: [build]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Production Job
-        run: echo "Running Production Job"
-
-  prod:
-    runs-on: ubuntu-latest
-    needs: [dev, stage]
-    if: github.event.inputs.releaseType == 'prod'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: saurabhshr  
 
       - name: Run Production Job
-        run: echo "Running Production Job"     
+        run: echo "Running Production Job"    
 
   # deploy:
   #   if: github.event.inputs.releaseType == 'prod'
