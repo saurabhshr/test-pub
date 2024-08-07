@@ -37,7 +37,7 @@ jobs:
       env:
         TEST_URL: https://test.k6.io # This should always hit the staging env, never production.
       with:
-        filename: k6-performnce-test.js
+        filename: k6-performance-test.js
 
   build:
     runs-on: ubuntu-latest
