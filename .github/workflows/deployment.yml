@@ -26,18 +26,34 @@ permissions:
 
 jobs:
 
-  k6:
-    name: K6 Performance Tests
+  k6_local_test:
+    name: k6 local test run - env vars example
     runs-on: ubuntu-latest
+    container: docker://grafana/k6:latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Run k6 test
-      uses: k6io/action@v0.1
-      env:
-        TEST_URL: https://test.k6.io # This should always hit the staging env, never production.
-      with:
-        filename: tests/k6-performance-test.js
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run k6 cloud test
+        uses: k6io/action@v0.1
+        with:
+          filename: tests/k6-performance-test.js
+        env:
+          TEST_URL: https://test.k6.io
+
+  # k6:
+  #   name: K6 Performance Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #   - name: Run k6 test
+  #     uses: k6io/action@v0.1
+  #     env:
+  #       TEST_URL: https://test.k6.io # This should always hit the staging env, never production.
+  #     with:
+  #       filename: tests/k6-performance-test.js
 
   build:
     runs-on: ubuntu-latest
@@ -60,7 +76,7 @@ jobs:
       - uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.PAT_TOKEN }}
-          approvers: saurabhshr  
+          #approvers: saurabhshr  
 
       - name: Run Production Job
         run: echo "Running Production Job"    
