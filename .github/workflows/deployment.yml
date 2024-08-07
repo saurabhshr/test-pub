@@ -27,14 +27,17 @@ permissions:
 jobs:
 
   k6:
+    name: K6 Performance Tests
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Run k6 test
       uses: k6io/action@v0.1
+      env:
+        TEST_URL: https://test.k6.io # This should always hit the staging env, never production.
       with:
-        filename: k6-performance-test.js
+        filename: tests/k6-performnce-test.js
 
   build:
     runs-on: ubuntu-latest
